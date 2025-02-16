@@ -2,49 +2,42 @@ package  me.yattaw.bulldog.players.types;
 
 import me.yattaw.bulldog.players.Player;
 
-/********************************************************/
-/* Michael Yattaw                                       */
-/* Login ID: michael.yattaw@maine.edu                   */
-/* COS 420, Spring 2025                                 */
-/* Bulldog Project                                      */
-/* RandomPlayer class: extends Player class             */
-/*           A RandomPlayer stops rolling based on a    */
-/*           random chance (50% each turn)              */
-/********************************************************/
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * RandomPlayer class: extends Player class.
+ * A RandomPlayer stops rolling based on a random chance (50% each turn).
+ */
 public class RandomPlayer extends Player {
 
+    /** The probability (50%) that the player will continue rolling the die. */
     private static final double CONTINUE_CHANCE = 0.5;
 
-    /********************************************************/
-    /* Constructor: RandomPlayer                            */
-    /* Purpose: Create a default RandomPlayer               */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /********************************************************/
+    /**
+     * Constructor for creating a default RandomPlayer with the name "Random".
+     */
     public RandomPlayer() {
         super("Random");
     }
 
-    /********************************************************/
-    /* Constructor: RandomPlayer                            */
-    /* Purpose: Create a new RandomPlayer object            */
-    /* Parameters:                                          */
-    /*   String name:  the name of the Player being created */
-    /********************************************************/
+    /**
+     * Constructor for creating a new RandomPlayer object with a specified name.
+     *
+     * @param name The name of the Player being created
+     */
     public RandomPlayer(String name) {
         super(name);
     }
 
-    /********************************************************/
-    /* Method:  play                                        */
-    /* Purpose: Take turns until the randomly generated     */
-    /*          value is greater than 0.5 (50% chance)      */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   the score earned by the player on this turn,       */
-    /*       which will be zero if a six was rolled         */
-    /********************************************************/
+    /**
+     * Takes turns rolling the die until a randomly generated value is greater than 0.5 (50% chance).
+     * If a six is rolled, the player scores 0 for the turn. Otherwise, the player accumulates the sum
+     * of the rolls until they choose to stop based on the random chance.
+     *
+     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     */
     @Override
     public int play() {
         int roundScore = 0;
@@ -63,6 +56,5 @@ public class RandomPlayer extends Player {
         System.out.printf("   Player %s chose not to continue, scoring %d for the turn%n", getName(), roundScore);
         return roundScore;
     }
-
 
 }

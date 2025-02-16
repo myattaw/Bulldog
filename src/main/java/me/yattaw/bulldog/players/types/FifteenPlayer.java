@@ -2,49 +2,42 @@ package me.yattaw.bulldog.players.types;
 
 import me.yattaw.bulldog.players.Player;
 
-/********************************************************/
-/* Michael Yattaw                                       */
-/* Login ID: michael.yattaw@maine.edu                   */
-/* COS 420, Spring 2025                                 */
-/* Bulldog Project                                      */
-/* FifteenPlayer class: extends Player class            */
-/*           A FifteenPlayer rolls until their score    */
-/*           reaches fifteen or greater                 */
-/********************************************************/
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * FifteenPlayer class: extends Player class.
+ * A FifteenPlayer rolls until their score reaches fifteen or greater.
+ */
 public class FifteenPlayer extends Player {
 
+    /** The target score (15) that the player aims to reach or exceed. */
     private static final int TARGET_SCORE = 15;
 
-    /********************************************************/
-    /* Constructor: FifteenPlayer                           */
-    /* Purpose: Create a default FifteenPlayer              */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /********************************************************/
+    /**
+     * Constructor for creating a default FifteenPlayer with the name "Fifteen".
+     */
     public FifteenPlayer() {
         super("Fifteen");
     }
 
-    /********************************************************/
-    /* Constructor: FifteenPlayer                           */
-    /* Purpose: Create a new FifteenPlayer object           */
-    /* Parameters:                                          */
-    /*   String name:  the name of the Player being created */
-    /********************************************************/
+    /**
+     * Constructor for creating a new FifteenPlayer object with a specified name.
+     *
+     * @param name The name of the Player being created
+     */
     public FifteenPlayer(String name) {
         super(name);
     }
 
-    /********************************************************/
-    /* Method:  play                                        */
-    /* Purpose: Takes turns until the player rolls          */
-    /*          fifteen or greater                          */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   the score earned by the player on this turn,       */
-    /*       which will be zero if a six was rolled         */
-    /********************************************************/
+    /**
+     * Takes turns rolling the die until the player's cumulative score reaches or exceeds the target score (15).
+     * If a six is rolled, the player scores 0 for the turn. Otherwise, the player accumulates the sum of the rolls
+     * until the target score is reached.
+     *
+     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     */
     @Override
     public int play() {
         int roundScore = 0;

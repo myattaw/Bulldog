@@ -5,32 +5,29 @@ import me.yattaw.bulldog.players.types.*;
 
 import java.util.*;
 
-/********************************************************/
-/* Michael Yattaw                                       */
-/* Login ID: michael.yattaw@maine.edu                   */
-/* COS 420, Spring 2025                                 */
-/* Bulldog Project                                      */
-/* Bulldog class: Main class for the Bulldog game       */
-/*           Manages matches, players, and gameplay     */
-/*           until a player reaches the winning score   */
-/********************************************************/
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * Bulldog class: Main class for the Bulldog game
+ * Manages matches, players, and gameplay until a player reaches the winning score.
+ */
 public class BulldogApplication {
 
+    /** The winning score required to win the game. */
     public static final int WINNING_SCORE = 104;
-    private final Map<String, List<Player>> matchPlayers = new HashMap<>(); // Match name and list of players in match.
 
-    /********************************************************/
-    /* Method:  main                                        */
-    /* Purpose: Entry point for the Bulldog game.           */
-    /*          Initializes a match, prompts the user to    */
-    /*          input the match name, number of players,    */
-    /*          and player types. Then starts the game      */
-    /*          and continues until a player wins.          */
-    /* Parameters:                                          */
-    /*   String[] args - Command-line arguments (unused)    */
-    /* Returns:                                             */
-    /*   void                                               */
-    /********************************************************/
+    /** Map to store match names and their associated players. */
+    private final Map<String, List<Player>> matchPlayers = new HashMap<>();
+
+    /**
+     * Entry point for the Bulldog game.
+     * Initializes a match, prompts the user to input the match name, number of players,
+     * and player types. Then starts the game and continues until a player wins.
+     *
+     * @param args Command-line arguments (unused)
+     */
     public static void main(String[] args) {
         BulldogApplication bulldog = new BulldogApplication();
         Scanner scanner = new Scanner(System.in);
@@ -69,19 +66,13 @@ public class BulldogApplication {
         bulldog.playUntilWinner(matchName);
     }
 
-    /********************************************************/
-    /* Method:  playUntilWinner                             */
-    /* Purpose: Manages gameplay for a match until a player */
-    /*          reaches or exceeds the winning score.       */
-    /*          Players take turns rolling the die, and     */
-    /*          their scores are updated and displayed      */
-    /*          after each turn. The game ends when a       */
-    /*          player's score reaches the WINNING_SCORE.   */
-    /* Parameters:                                          */
-    /*   String matchName - The name of the match to play   */
-    /* Returns:                                             */
-    /*   void                                               */
-    /********************************************************/
+    /**
+     * Manages gameplay for a match until a player reaches or exceeds the winning score.
+     * Players take turns rolling the die, and their scores are updated and displayed
+     * after each turn. The game ends when a player's score reaches the WINNING_SCORE.
+     *
+     * @param matchName The name of the match to play
+     */
     private void playUntilWinner(String matchName) {
         List<Player> playerList = getMatchPlayers().get(matchName);
 
@@ -96,7 +87,7 @@ public class BulldogApplication {
                 int roundScore = player.play();
                 player.setScore(player.getScore() + roundScore);
 
-                // print current scores of all players
+                // Print current scores of all players
                 System.out.println();
                 System.out.printf("After Player %d '%s' scored %d points, the current scores are:%n", i + 1, player.getName(), roundScore);
                 for (int j = 0; j < playerList.size(); j++) {
@@ -113,22 +104,15 @@ public class BulldogApplication {
         }
     }
 
-    /********************************************************/
-    /* Method:  createPlayer                                */
-    /* Purpose: Creates a new player of the specified type  */
-    /*          and adds them to the match. Valid player    */
-    /*          types are "fifteen", "human", "random", and */
-    /*          "unique". Returns false if the player type  */
-    /*          is invalid.                                 */
-    /* Parameters:                                          */
-    /*   String match - The name of the match to add the    */
-    /*                  player to                           */
-    /*   String playerType - The type of player to create   */
-    /* Returns:                                             */
-    /*   boolean - True if the player was created and added,*/
-    /*             false if the player type is invalid      */
-
-    /********************************************************/
+    /**
+     * Creates a new player of the specified type and adds them to the match.
+     * Valid player types are "ai", "fifteen", "human", "random", "unique", and "wimp".
+     * Returns false if the player type is invalid.
+     *
+     * @param match The name of the match to add the player to
+     * @param playerType The type of player to create
+     * @return True if the player was created and added, false if the player type is invalid
+     */
     private boolean createPlayer(String match, String playerType) {
         Player player;
         switch (playerType) {
@@ -145,19 +129,11 @@ public class BulldogApplication {
         return matchPlayers.get(match).add(player);
     }
 
-    /********************************************************/
-    /* Method:  getMatchPlayers                             */
-    /* Purpose: Returns the map containing all matches and  */
-    /*          their associated players.                   */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   Map<String, List<Player>> - A map where the key is */
-    /*                               the match name and the */
-    /*                               value is a list of     */
-    /*                               players in the match   */
-
-    /********************************************************/
+    /**
+     * Returns the map containing all matches and their associated players.
+     *
+     * @return A map where the key is the match name and the value is a list of players in the match
+     */
     public Map<String, List<Player>> getMatchPlayers() {
         return matchPlayers;
     }

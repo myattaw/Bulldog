@@ -2,53 +2,48 @@ package me.yattaw.bulldog.players.types;
 
 import me.yattaw.bulldog.players.Player;
 
-/********************************************************/
-/* Michael Yattaw                                       */
-/* Login ID: michael.yattaw@maine.edu                   */
-/* COS 420, Spring 2025                                 */
-/* Bulldog Project                                      */
-/* UniquePlayer class: extends Player class             */
-/*           A UniquePlayer uses a dynamic threshold    */
-/*           to decide when to stop rolling             */
-/********************************************************/
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * AIUniquePlayer class: extends Player class.
+ * A AIUniquePlayer uses a dynamic threshold to decide when to stop rolling.
+ */
 public class AIUniquePlayer extends Player {
 
+    /** The base threshold value for stopping rolls. */
     private static final int BASE_THRESHOLD = 20;
+
+    /** The minimum threshold value, ensuring it never goes below this value. */
     private static final int MIN_THRESHOLD = 10;
+
+    /** The divisor used to adjust the threshold based on the player's overall score. */
     private static final int SCORE_DIVISOR = 10;
 
-    /********************************************************/
-    /* Constructor: UniquePlayer                            */
-    /* Purpose: Create a default UniquePlayer               */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /********************************************************/
+    /**
+     * Constructor for creating a default AIUniquePlayer with the name "Unique".
+     */
     public AIUniquePlayer() {
         super("Unique");
     }
 
-    /********************************************************/
-    /* Constructor: UniquePlayer                            */
-    /* Purpose: Create a new UniquePlayer object            */
-    /* Parameters:                                          */
-    /*   String name:  the name of the Player being created */
-    /********************************************************/
+    /**
+     * Constructor for creating a new AIUniquePlayer object with a specified name.
+     *
+     * @param name The name of the Player being created
+     */
     public AIUniquePlayer(String name) {
         super(name);
     }
 
-    /********************************************************/
-    /* Method:  play                                        */
-    /* Purpose: Takes turns for this Player, rolling the die*/
-    /*          until a 6 is rolled or the dynamic threshold*/
-    /*          is reached. The threshold decreases as the  */
-    /*          player's overall score increases.           */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   the score earned by the player on this turn,       */
-    /*       which will be zero if a six was rolled         */
-    /********************************************************/
+    /**
+     * Takes turns for this Player, rolling the die until a 6 is rolled or the dynamic threshold is reached.
+     * The threshold decreases as the player's overall score increases, ensuring the player becomes more
+     * cautious as their score grows.
+     *
+     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     */
     @Override
     public int play() {
         int turnScore = 0;
@@ -78,18 +73,12 @@ public class AIUniquePlayer extends Player {
         return turnScore;
     }
 
-    /********************************************************/
-    /* Method:  calculateThreshold                          */
-    /* Purpose: Calculates the dynamic threshold for        */
-    /*          deciding when to stop rolling. The threshold*/
-    /*          decreases as the player's overall score     */
-    /*          increases, but never goes below the minimum */
-    /*          threshold (MIN_THRESHOLD).                  */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   the calculated threshold value                     */
-    /********************************************************/
+    /**
+     * Calculates the dynamic threshold for deciding when to stop rolling.
+     * The threshold decreases as the player's overall score increases but never goes below the minimum threshold.
+     *
+     * @return The calculated threshold value
+     */
     private int calculateThreshold() {
         return Math.max(MIN_THRESHOLD, BASE_THRESHOLD - (getScore() / SCORE_DIVISOR));
     }

@@ -2,48 +2,40 @@ package  me.yattaw.bulldog.players.types;
 
 import me.yattaw.bulldog.players.Player;
 
-/********************************************************/
-/* David Levine                                         */
-/* Login ID: david.b.levine@maine.edu                   */
-/* COS 497, Summer 2024                                 */
-/* Programming Assignment 6                             */
-/* WimpPlayer class: extends Player class               */
-/*           A WimpPlayer always rolls the die once     */
-/*      See Kettering University, CS-101, Prog 6        */
-/********************************************************/
-
+/**
+ * David Levine
+ * Login ID: david.b.levine@maine.edu
+ * COS 497, Summer 2024
+ * Programming Assignment 6
+ * WimpPlayer class: extends Player class.
+ * A WimpPlayer always rolls the die once.
+ * See Kettering University, CS-101, Prog 6.
+ */
 public class WimpPlayer extends Player {
 
-    /********************************************************/
-    /* Constructor: WimpPlayer                              */
-    /* Purpose: Create a default WimpPlayer                 */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /********************************************************/
+    /**
+     * Constructor for creating a default WimpPlayer with the name "Wimp".
+     */
     public WimpPlayer() {
         this("Wimp");
     }
 
-    /********************************************************/
-    /* Constructor: WimpPlayer                              */
-    /* Purpose: Create a new WimpPlayer object              */
-    /* Parameters:                                          */
-    /*   String name:  the name of the Player being created */
-    /********************************************************/
+    /**
+     * Constructor for creating a new WimpPlayer object with a specified name.
+     *
+     * @param name The name of the Player being created
+     */
     public WimpPlayer(String name) {
         super(name);
     }
 
-    /********************************************************/
-    /* Method:  play                                        */
-    /* Purpose: Take one turn for this Player               */
-    /*          One turn for a WimpPlayer is a single roll  */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   the score earned by the player on this turn,       */
-    /*       which will be zero if a six was rolled         */
-    /********************************************************/
+    /**
+     * Takes one turn for this Player. A WimpPlayer always rolls the die once.
+     * If the roll is a 6, the player scores 0 for the turn. Otherwise, the player
+     * scores the value of the roll and chooses not to continue.
+     *
+     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     */
     @Override
     public int play() {
         int roll = rollDie();

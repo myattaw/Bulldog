@@ -2,51 +2,43 @@ package me.yattaw.bulldog.players.types;
 
 import me.yattaw.bulldog.players.Player;
 
-/********************************************************/
-/* Michael Yattaw                                       */
-/* Login ID: michael.yattaw@maine.edu                   */
-/* COS 420, Spring 2025                                 */
-/* Bulldog Project                                      */
-/* UniquePlayer class: extends Player class             */
-/*           A UniquePlayer takes turns exponentially   */
-/*           each round, doubling the number of rolls   */
-/*           until a six is rolled, which resets the    */
-/*           exponential counter.                       */
-/********************************************************/
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * UniquePlayer class: extends Player class.
+ * A UniquePlayer takes turns exponentially each round, doubling the number of rolls
+ * until a six is rolled, which resets the exponential counter.
+ */
 public class UniquePlayer extends Player {
 
+    /** Tracks the exponential number of rolls for each turn. */
     private int exponential;
 
-    /********************************************************/
-    /* Constructor: UniquePlayer                            */
-    /* Purpose: Create a default UniquePlayer               */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /********************************************************/
+    /**
+     * Constructor for creating a default UniquePlayer with the name "Exponential".
+     */
     public UniquePlayer() {
         super("Exponential");
     }
 
-    /********************************************************/
-    /* Constructor: UniquePlayer                            */
-    /* Purpose: Create a new UniquePlayer object            */
-    /* Parameters:                                          */
-    /*   String name:  the name of the Player being created */
-    /********************************************************/
+    /**
+     * Constructor for creating a new UniquePlayer object with a specified name.
+     *
+     * @param name The name of the Player being created
+     */
     public UniquePlayer(String name) {
         super(name);
     }
 
-    /********************************************************/
-    /* Method:  play                                        */
-    /* Purpose: Takes turns exponentially each round until  */
-    /*          six is reach which resets exponential value */
-    /* Parameters:                                          */
-    /*   none                                               */
-    /* Returns:                                             */
-    /*   the score earned by the player on this turn,       */
-    /*       which will be zero if a six was rolled         */
-    /********************************************************/
+    /**
+     * Takes turns exponentially each round, doubling the number of rolls until a six is rolled.
+     * If a six is rolled, the exponential counter is reset, and the player scores 0 for the turn.
+     * Otherwise, the player accumulates the sum of the rolls for the turn.
+     *
+     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     */
     @Override
     public int play() {
         int roundScore = 0;
