@@ -5,9 +5,12 @@ import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.players.types.*;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class BulldogUI extends JFrame {
     private JButton addPlayerButton, startGameButton;
@@ -85,13 +88,18 @@ public class BulldogUI extends JFrame {
         // Iterate through player containers to add players
         for (Component comp : playersPanel.getComponents()) {
             if (comp instanceof JPanel playerContainer) {
-                Component[] components = playerContainer.getComponents();
                 JPanel inputPanel = (JPanel) ((BorderLayout) playerContainer.getLayout()).getLayoutComponent(BorderLayout.CENTER);
                 Component[] inputComponents = inputPanel.getComponents();
-                String name = ((JTextField) inputComponents[1]).getText();
-                String type = (String) ((JComboBox<?>) inputComponents[3]).getSelectedItem();
 
-                if (type != null && !name.isEmpty()) {
+                String name = Arrays.stream(inputComponents).filter(inputComponent -> inputComponent instanceof JTextField)
+                        .map(inputComponent -> (JTextField) inputComponent).findFirst().map(JTextComponent::getText)
+                        .orElse("");
+
+                String type = Arrays.stream(inputComponents).filter(component -> component instanceof JComboBox<?>)
+                        .map(component -> (JComboBox<?>) component).findFirst().map(comboBox -> (String) comboBox.getSelectedItem())
+                        .orElse("");
+
+                if (!name.isEmpty()) {
                     switch (type) {
                         case "AI" -> players.add(new AIUniquePlayer(name));
                         case "Fifteen" -> players.add(new FifteenPlayer(name));
