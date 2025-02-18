@@ -5,99 +5,123 @@ import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.players.types.*;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.io.PrintStream;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class BulldogUI extends JFrame {
-    private JButton addPlayerButton, startGameButton;
-    private final JPanel playersPanel;
+    private CardLayout cardLayout;
+    private JPanel mainPanel; // Panel to hold all cards
+    private JPanel mainMenuPanel; // Main menu card
+    private JPanel gamePlayPanel; // Game play card
+    private JTextArea transcriptArea; // Transcript for game play
+    private JButton rollDiceButton, stopTurnButton;
     private final List<Player> players;
+    private int currentPlayerIndex;
+    private boolean gameInProgress;
+    private int currentRoundScore; // Track the current round score for the active player
 
     public BulldogUI() {
         setTitle("Bulldog Game");
-        setSize(800, 400); // Increased width to accommodate side-by-side player containers
+        setSize(800, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
         setResizable(false);
 
+        // Initialize CardLayout and main panel
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
         players = new ArrayList<>();
+        currentPlayerIndex = 0;
+        gameInProgress = false;
+        currentRoundScore = 0;
 
-        // Add Player Button at the top
-        addPlayerButton = new JButton("ADD PLAYER");
-        addPlayerButton.addActionListener(e -> addPlayerContainer());
-        add(addPlayerButton, BorderLayout.NORTH);
+        // Create and add panels
+        createMainMenuPanel();
+        createGamePlayPanel();
+        mainPanel.add(mainMenuPanel, "MainMenu");
+        mainPanel.add(gamePlayPanel, "GamePlay");
 
-        // Panel to hold player containers (side by side)
-        playersPanel = new JPanel();
-        playersPanel.setLayout(new FlowLayout(FlowLayout.LEFT)); // Use FlowLayout for side-by-side stacking
-        add(new JScrollPane(playersPanel), BorderLayout.CENTER);
+        // Set the main panel as the content pane
+        setContentPane(mainPanel);
 
-        // Start Game Button at the bottom
-        startGameButton = new JButton("START GAME");
-        startGameButton.addActionListener(e -> startGame());
-        add(startGameButton, BorderLayout.SOUTH);
-
+        // Show the main menu initially
+        cardLayout.show(mainPanel, "MainMenu");
         setVisible(true);
     }
 
+    private void createMainMenuPanel() {
+        mainMenuPanel = new JPanel(new BorderLayout());
+
+        // Add Player Button at the top
+        JButton addPlayerButton = new JButton("ADD PLAYER");
+        addPlayerButton.addActionListener(e -> addPlayerContainer());
+        mainMenuPanel.add(addPlayerButton, BorderLayout.NORTH);
+
+        // Panel to hold player containers (side by side)
+        JPanel playersPanel = new JPanel();
+        playersPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        mainMenuPanel.add(new JScrollPane(playersPanel), BorderLayout.CENTER);
+
+        // Start Game Button at the bottom
+        JButton startGameButton = new JButton("START GAME");
+        startGameButton.addActionListener(e -> startGame(playersPanel));
+        mainMenuPanel.add(startGameButton, BorderLayout.SOUTH);
+    }
+
     private void addPlayerContainer() {
-        JPanel playerContainer = new JPanel();
-        playerContainer.setLayout(new BorderLayout()); // Use BorderLayout for the player container
+        JPanel playerContainer = new JPanel(new BorderLayout());
 
         // Panel for name and combo box
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 2, 5, 5)); // 2 rows, 2 columns for name and combo box
+        JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
 
         JLabel playerLabel = new JLabel("Player Information");
         inputPanel.add(playerLabel);
-        inputPanel.add(new Label()); // Add empty label for easy alignment.
+        inputPanel.add(new Label()); // Empty label for alignment
 
         JTextField nameField = new JTextField(10);
         inputPanel.add(new JLabel("Name:"));
         inputPanel.add(nameField);
 
-        // Combo box for player type
         JComboBox<String> playerTypeCombo = new JComboBox<>(new String[]{"AI", "Fifteen", "Human", "Random", "Unique", "Wimp"});
         inputPanel.add(new JLabel("Type:"));
         inputPanel.add(playerTypeCombo);
 
-        // Add input panel to the center of the player container
         playerContainer.add(inputPanel, BorderLayout.CENTER);
 
-        // Remove Player button at the bottom (stretches across the entire width)
+        // Remove Player button
         JButton removePlayerButton = new JButton("Remove Player");
         removePlayerButton.addActionListener(e -> {
+            // Retrieve the playersPanel from the JScrollPane
+            JScrollPane scrollPane = (JScrollPane) mainMenuPanel.getComponent(1);
+            JPanel playersPanel = (JPanel) scrollPane.getViewport().getView();
             playersPanel.remove(playerContainer);
             playersPanel.revalidate();
             playersPanel.repaint();
         });
         playerContainer.add(removePlayerButton, BorderLayout.SOUTH);
 
+        // Retrieve the playersPanel from the JScrollPane
+        JScrollPane scrollPane = (JScrollPane) mainMenuPanel.getComponent(1);
+        JPanel playersPanel = (JPanel) scrollPane.getViewport().getView();
         playersPanel.add(playerContainer);
         playersPanel.revalidate();
         playersPanel.repaint();
     }
 
-    private void startGame() {
+    private void startGame(JPanel playersPanel) {
         players.clear();
 
         // Iterate through player containers to add players
         for (Component comp : playersPanel.getComponents()) {
             if (comp instanceof JPanel playerContainer) {
-                JPanel inputPanel = (JPanel) ((BorderLayout) playerContainer.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+                JPanel inputPanel = (JPanel) playerContainer.getComponent(0);
                 Component[] inputComponents = inputPanel.getComponents();
 
-                String name = Arrays.stream(inputComponents).filter(inputComponent -> inputComponent instanceof JTextField)
-                        .map(inputComponent -> (JTextField) inputComponent).findFirst().map(JTextComponent::getText)
-                        .orElse("");
-
-                String type = Arrays.stream(inputComponents).filter(component -> component instanceof JComboBox<?>)
-                        .map(component -> (JComboBox<?>) component).findFirst().map(comboBox -> (String) comboBox.getSelectedItem())
-                        .orElse("");
+                String name = ((JTextField) inputComponents[3]).getText();
+                String type = (String) ((JComboBox<?>) inputComponents[5]).getSelectedItem();
 
                 if (!name.isEmpty()) {
                     switch (type) {
@@ -117,9 +141,119 @@ public class BulldogUI extends JFrame {
             return;
         }
 
-        BulldogApplication bulldog = new BulldogApplication();
-        bulldog.getMatchPlayers().put("Match", players);
-        bulldog.playUntilWinner("Match");
+        // Switch to the game play panel
+        cardLayout.show(mainPanel, "GamePlay");
+        gameInProgress = true;
+        currentPlayerIndex = 0;
+        currentRoundScore = 0; // Reset round score
+        startNextTurn();
+    }
+
+    private void createGamePlayPanel() {
+        gamePlayPanel = new JPanel(new BorderLayout());
+
+        // Transcript area
+        transcriptArea = new JTextArea();
+        transcriptArea.setEditable(false);
+
+        // Redirect System.out to the transcript area
+        PrintStream printStream = new PrintStream(new TextAreaOutputStream(transcriptArea));
+        System.setOut(printStream);
+
+        gamePlayPanel.add(new JScrollPane(transcriptArea), BorderLayout.CENTER);
+
+        // Control panel for buttons
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new FlowLayout());
+
+        rollDiceButton = new JButton("ROLL DICE");
+        rollDiceButton.addActionListener(e -> rollDice());
+        controlPanel.add(rollDiceButton);
+
+        stopTurnButton = new JButton("STOP TURN");
+        stopTurnButton.addActionListener(e -> stopTurn());
+        controlPanel.add(stopTurnButton);
+
+        gamePlayPanel.add(controlPanel, BorderLayout.SOUTH);
+    }
+
+    private void startNextTurn() {
+        Player currentPlayer = players.get(currentPlayerIndex);
+        updateTranscript("It's " + currentPlayer.getName() + "'s turn!");
+
+        if (currentPlayer instanceof HumanPlayer) {
+            rollDiceButton.setEnabled(true);
+            stopTurnButton.setEnabled(true);
+        } else {
+            rollDiceButton.setEnabled(false);
+            stopTurnButton.setEnabled(false);
+            // AI or other players take their turn automatically
+            int roundScore = currentPlayer.play();
+            updateTranscript(currentPlayer.getName() + " scored " + roundScore + " points.");
+            currentRoundScore = roundScore; // Track the round score
+            endTurn();
+        }
+    }
+
+    private void rollDice() {
+        Player currentPlayer = players.get(currentPlayerIndex);
+        if (currentPlayer instanceof HumanPlayer) {
+            int roll = currentPlayer.rollDie();
+            updateTranscript(currentPlayer.getName() + " rolled a " + roll + ".");
+
+            if (roll == 6) {
+                updateTranscript("Rolled a 6. Turn ends with 0 points.");
+                currentRoundScore = 0; // Set round score to 0
+                endTurn();
+            } else {
+                currentRoundScore += roll; // Add to the round score
+            }
+        }
+    }
+
+    private void stopTurn() {
+        Player currentPlayer = players.get(currentPlayerIndex);
+        if (currentPlayer instanceof HumanPlayer) {
+            updateTranscript(currentPlayer.getName() + " chose to stop.");
+            endTurn();
+        }
+    }
+
+    private void endTurn() {
+        Player currentPlayer = players.get(currentPlayerIndex);
+        currentPlayer.setScore(currentPlayer.getScore() + currentRoundScore); // Update total score
+        updateScores(); // Display updated scores
+
+        if (currentPlayer.getScore() >= BulldogApplication.WINNING_SCORE) {
+            updateTranscript(currentPlayer.getName() + " wins the game with a score of " + currentPlayer.getScore() + "!");
+            gameInProgress = false;
+            rollDiceButton.setEnabled(false);
+            stopTurnButton.setEnabled(false);
+            return;
+        }
+
+        currentRoundScore = 0; // Reset round score for the next player
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        startNextTurn();
+    }
+
+    private void updateScores() {
+        updateTranscript("Current scores:");
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            updateTranscript(" - Player " + (i + 1) + " '" + player.getName() + "': " + player.getScore() + " points");
+        }
+        transcriptArea.append("\n");
+    }
+
+    private void updateTranscript(String message) {
+        // Get the current time and format it as HH:MM:ss
+        LocalTime currentTime = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String timestamp = currentTime.format(formatter);
+
+        // Append the timestamp and message to the transcript area with the specified format
+        transcriptArea.append("[" + timestamp + "]: " + message + "\n");
     }
 
     public static void main(String[] args) {

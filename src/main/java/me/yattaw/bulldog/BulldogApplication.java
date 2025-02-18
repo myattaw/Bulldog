@@ -16,7 +16,7 @@ import java.util.*;
 public class BulldogApplication {
 
     /** The winning score required to win the game. */
-    public static final int WINNING_SCORE = 104;
+    public static final int WINNING_SCORE = 40;
 
     /** Map to store match names and their associated players. */
     private final Map<String, List<Player>> matchPlayers = new HashMap<>();

@@ -66,7 +66,7 @@ public abstract class Player {
      *
      * @return A random integer between 1 and 6
      */
-    protected int rollDie() {
+    public int rollDie() {
         return (int) (Math.random() * 6) + 1;
     }
 
