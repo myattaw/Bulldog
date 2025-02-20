@@ -18,7 +18,7 @@ public class BulldogUI extends JFrame {
     private JPanel mainMenuPanel; // Main menu card
     private JPanel gamePlayPanel; // Game play card
     private JTextArea transcriptArea; // Transcript for game play
-    private JButton rollDiceButton, stopTurnButton;
+    private JButton rollDiceButton, stopTurnButton, mainMenuButton; // Added mainMenuButton
     private final List<Player> players;
     private int currentPlayerIndex;
     private boolean gameInProgress;
@@ -55,31 +55,42 @@ public class BulldogUI extends JFrame {
     private void createMainMenuPanel() {
         mainMenuPanel = new JPanel(new BorderLayout());
 
-        // Add Player Button at the top
-        JButton addPlayerButton = new JButton("ADD PLAYER");
+        JButton addPlayerButton = new JButton("Add New Player");
         addPlayerButton.addActionListener(e -> addPlayerContainer());
         mainMenuPanel.add(addPlayerButton, BorderLayout.NORTH);
 
-        // Panel to hold player containers (side by side)
-        JPanel playersPanel = new JPanel();
-        playersPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        mainMenuPanel.add(new JScrollPane(playersPanel), BorderLayout.CENTER);
+        // Panel to hold players (flexible but structured)
+        JPanel playersPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+        gbc.anchor = GridBagConstraints.NORTHWEST; // Aligns items at the top-left
 
-        // Start Game Button at the bottom
-        JButton startGameButton = new JButton("START GAME");
+        JScrollPane scrollPane = new JScrollPane(playersPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        mainMenuPanel.add(scrollPane, BorderLayout.CENTER);
+
+        JButton startGameButton = new JButton("Start Match");
         startGameButton.addActionListener(e -> startGame(playersPanel));
         mainMenuPanel.add(startGameButton, BorderLayout.SOUTH);
+
+        // Store panel reference for adding new players
+        mainMenuPanel.putClientProperty("playersPanel", playersPanel);
+        mainMenuPanel.putClientProperty("gbc", gbc);
     }
 
     private void addPlayerContainer() {
         JPanel playerContainer = new JPanel(new BorderLayout());
+        playerContainer.setPreferredSize(new Dimension(230, 120)); // Fixed size to prevent stretching
 
-        // Panel for name and combo box
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
 
         JLabel playerLabel = new JLabel("Player Information");
         inputPanel.add(playerLabel);
-        inputPanel.add(new Label()); // Empty label for alignment
+        inputPanel.add(new JLabel()); // Empty label for spacing
 
         JTextField nameField = new JTextField(10);
         inputPanel.add(new JLabel("Name:"));
@@ -94,19 +105,60 @@ public class BulldogUI extends JFrame {
         // Remove Player button
         JButton removePlayerButton = new JButton("Remove Player");
         removePlayerButton.addActionListener(e -> {
-            // Retrieve the playersPanel from the JScrollPane
             JScrollPane scrollPane = (JScrollPane) mainMenuPanel.getComponent(1);
             JPanel playersPanel = (JPanel) scrollPane.getViewport().getView();
+
+            // Remove the selected player container
             playersPanel.remove(playerContainer);
+
+            // Call rearrangePlayers to reorder the remaining players in the panel
+            rearrangePlayers(playersPanel);
+
+            // Revalidate and repaint the panel
             playersPanel.revalidate();
             playersPanel.repaint();
         });
+
         playerContainer.add(removePlayerButton, BorderLayout.SOUTH);
 
-        // Retrieve the playersPanel from the JScrollPane
-        JScrollPane scrollPane = (JScrollPane) mainMenuPanel.getComponent(1);
-        JPanel playersPanel = (JPanel) scrollPane.getViewport().getView();
-        playersPanel.add(playerContainer);
+        // Retrieve the players panel from mainMenuPanel
+        JPanel playersPanel = (JPanel) mainMenuPanel.getClientProperty("playersPanel");
+
+        // Create a new constraints object for each addition
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = playersPanel.getComponentCount() % 3; // Column index (0-2)
+        gbc.gridy = playersPanel.getComponentCount() / 3; // New row every 3 players
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+        gbc.anchor = GridBagConstraints.CENTER; // Align items at the top-left
+
+        // Add player container
+        playersPanel.add(playerContainer, gbc);
+
+        playersPanel.revalidate();
+        playersPanel.repaint();
+    }
+
+
+    private void rearrangePlayers(JPanel playersPanel) {
+        // Get the remaining components
+        Component[] components = playersPanel.getComponents();
+
+        // Reposition each component based on index
+        int index = 0;
+        for (Component comp : components) {
+            if (comp instanceof JPanel playerContainer) {
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.gridx = index % 3; // Columns
+                gbc.gridy = index / 3; // Rows
+                gbc.insets = new Insets(10, 10, 10, 10);
+                gbc.anchor = GridBagConstraints.CENTER; // Center items
+                playersPanel.add(playerContainer, gbc);
+
+                index++;
+            }
+        }
+
+        // Revalidate and repaint the panel after rearranging
         playersPanel.revalidate();
         playersPanel.repaint();
     }
@@ -174,6 +226,12 @@ public class BulldogUI extends JFrame {
         stopTurnButton.addActionListener(e -> stopTurn());
         controlPanel.add(stopTurnButton);
 
+        // Add Main Menu button
+        mainMenuButton = new JButton("MAIN MENU");
+        mainMenuButton.addActionListener(e -> cardLayout.show(mainPanel, "MainMenu"));
+        mainMenuButton.setEnabled(false); // Initially disabled
+        controlPanel.add(mainMenuButton);
+
         gamePlayPanel.add(controlPanel, BorderLayout.SOUTH);
     }
 
@@ -229,6 +287,7 @@ public class BulldogUI extends JFrame {
             gameInProgress = false;
             rollDiceButton.setEnabled(false);
             stopTurnButton.setEnabled(false);
+            mainMenuButton.setEnabled(true); // Enable the Main Menu button
             return;
         }
 
@@ -259,4 +318,5 @@ public class BulldogUI extends JFrame {
     public static void main(String[] args) {
         new BulldogUI();
     }
+
 }
