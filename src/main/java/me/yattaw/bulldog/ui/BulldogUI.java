@@ -6,13 +6,14 @@ import me.yattaw.bulldog.players.types.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.PrintStream;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BulldogUI extends JFrame {
+
+    public static final String PLAYER_INFO_LABEL = "Player %d Details:";
     private CardLayout cardLayout;
     private JPanel mainPanel; // Panel to hold all cards
     private JPanel mainMenuPanel; // Main menu card
@@ -83,12 +84,16 @@ public class BulldogUI extends JFrame {
     }
 
     private void addPlayerContainer() {
+
+        // Retrieve the players panel from mainMenuPanel
+        JPanel playersPanel = (JPanel) mainMenuPanel.getClientProperty("playersPanel");
+
         JPanel playerContainer = new JPanel(new BorderLayout());
         playerContainer.setPreferredSize(new Dimension(230, 120)); // Fixed size to prevent stretching
 
         JPanel inputPanel = new JPanel(new GridLayout(3, 2, 5, 5));
 
-        JLabel playerLabel = new JLabel("Player Information");
+        JLabel playerLabel = new JLabel(String.format(PLAYER_INFO_LABEL, playersPanel.getComponentCount() + 1));
         inputPanel.add(playerLabel);
         inputPanel.add(new JLabel()); // Empty label for spacing
 
@@ -105,9 +110,6 @@ public class BulldogUI extends JFrame {
         // Remove Player button
         JButton removePlayerButton = new JButton("Remove Player");
         removePlayerButton.addActionListener(e -> {
-            JScrollPane scrollPane = (JScrollPane) mainMenuPanel.getComponent(1);
-            JPanel playersPanel = (JPanel) scrollPane.getViewport().getView();
-
             // Remove the selected player container
             playersPanel.remove(playerContainer);
 
@@ -120,9 +122,6 @@ public class BulldogUI extends JFrame {
         });
 
         playerContainer.add(removePlayerButton, BorderLayout.SOUTH);
-
-        // Retrieve the players panel from mainMenuPanel
-        JPanel playersPanel = (JPanel) mainMenuPanel.getClientProperty("playersPanel");
 
         // Create a new constraints object for each addition
         GridBagConstraints gbc = new GridBagConstraints();
@@ -147,6 +146,17 @@ public class BulldogUI extends JFrame {
         int index = 0;
         for (Component comp : components) {
             if (comp instanceof JPanel playerContainer) {
+                for (Component c : playerContainer.getComponents()) {
+                    if (c instanceof JPanel playerPanel) {
+                        for (Component playerComponent : playerPanel.getComponents()) {
+                            if (playerComponent instanceof JLabel playerLabel) {
+                                playerLabel.setText(String.format(PLAYER_INFO_LABEL, index + 1));
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = index % 3; // Columns
                 gbc.gridy = index / 3; // Rows
@@ -208,10 +218,6 @@ public class BulldogUI extends JFrame {
         transcriptArea = new JTextArea();
         transcriptArea.setEditable(false);
 
-        // Redirect System.out to the transcript area
-        PrintStream printStream = new PrintStream(new TextAreaOutputStream(transcriptArea));
-        System.setOut(printStream);
-
         gamePlayPanel.add(new JScrollPane(transcriptArea), BorderLayout.CENTER);
 
         // Control panel for buttons
@@ -238,7 +244,6 @@ public class BulldogUI extends JFrame {
     private void startNextTurn() {
         Player currentPlayer = players.get(currentPlayerIndex);
         updateTranscript("It's " + currentPlayer.getName() + "'s turn!");
-
         if (currentPlayer instanceof HumanPlayer) {
             rollDiceButton.setEnabled(true);
             stopTurnButton.setEnabled(true);
