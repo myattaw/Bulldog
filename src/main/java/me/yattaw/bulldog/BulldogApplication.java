@@ -73,7 +73,7 @@ public class BulldogApplication {
      *
      * @param matchName The name of the match to play
      */
-    private void playUntilWinner(String matchName) {
+    public void playUntilWinner(String matchName) {
         List<Player> playerList = getMatchPlayers().get(matchName);
 
         if (playerList == null || playerList.isEmpty()) {
