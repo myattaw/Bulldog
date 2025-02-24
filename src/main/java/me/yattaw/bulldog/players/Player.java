@@ -1,5 +1,7 @@
 package me.yattaw.bulldog.players;
 
+import me.yattaw.bulldog.data.Dice;
+
 /**
  * David Levine
  * Login ID: david.b.levine@maine.edu
@@ -67,7 +69,7 @@ public abstract class Player {
      * @return A random integer between 1 and 6
      */
     public int rollDie() {
-        return (int) (Math.random() * 6) + 1;
+        return new Dice(6).roll();
     }
 
 }
