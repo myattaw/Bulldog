@@ -35,6 +35,10 @@ public class PlayerModel {
         players.add(player);
     }
 
+    public void removeAll() {
+        players.clear();
+    }
+
     /**
      * Retrieves the name of a player at the specified index.
      *

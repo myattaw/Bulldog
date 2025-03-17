@@ -1,14 +1,12 @@
 package me.yattaw.bulldog.ui.panels;
 
-import me.yattaw.bulldog.players.Player;
+import me.yattaw.bulldog.model.PlayerModel;
 import me.yattaw.bulldog.players.types.*;
 import me.yattaw.bulldog.ui.BulldogUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Michael Yattaw
@@ -23,13 +21,13 @@ public class MainMenuPanel extends JPanel {
     public static final String PLAYER_INFO_LABEL = "Player %d Details:";
 
     /** Panel to hold player entry fields. */
-    private JPanel playersPanel;
+    private final JPanel playersPanel;
 
     /** Layout constraints for dynamically positioning elements. */
-    private GridBagConstraints gbc;
+    private final GridBagConstraints gbc;
 
     /** List of players added in the menu. */
-    private List<Player> players;
+    private final PlayerModel playerModel;
 
     /**
      * Constructs the main menu panel with UI components for adding players and starting a game.
@@ -58,7 +56,7 @@ public class MainMenuPanel extends JPanel {
         startGameButton.addActionListener(e -> startGame());
         add(startGameButton, BorderLayout.SOUTH);
 
-        players = new ArrayList<>();
+        this.playerModel = new PlayerModel();
     }
 
     /**
@@ -112,7 +110,6 @@ public class MainMenuPanel extends JPanel {
         int index = 0;
         for (Component comp : components) {
             if (comp instanceof JPanel playerContainer) {
-
                 updatePlayerLabel(playerContainer, index);
 
                 gbc.gridx = index % 3;
@@ -131,16 +128,18 @@ public class MainMenuPanel extends JPanel {
 
     /**
      * Updates the label of a player within the specified player container.
-     * The label is updated to display the player's position (index + 1) using the predefined format {@link #PLAYER_INFO_LABEL}.
      *
      * @param playerContainer The container panel that holds the player's components.
      * @param index           The index of the player, used to determine their position in the display.
      */
     private void updatePlayerLabel(JPanel playerContainer, int index) {
-        Arrays.stream(playerContainer.getComponents()).filter(c -> c instanceof JPanel)
-                .map(c -> (JPanel) c).flatMap(playerPanel -> Arrays.stream(playerPanel.getComponents()))
+        Arrays.stream(playerContainer.getComponents())
+                .filter(c -> c instanceof JPanel)
+                .map(c -> (JPanel) c)
+                .flatMap(playerPanel -> Arrays.stream(playerPanel.getComponents()))
                 .filter(playerComponent -> playerComponent instanceof JLabel)
-                .map(playerComponent -> (JLabel) playerComponent).findFirst()
+                .map(playerComponent -> (JLabel) playerComponent)
+                .findFirst()
                 .ifPresent(playerLabel -> playerLabel.setText(String.format(PLAYER_INFO_LABEL, index + 1)));
     }
 
@@ -148,7 +147,7 @@ public class MainMenuPanel extends JPanel {
      * Starts the game by collecting player data and initializing the match.
      */
     private void startGame() {
-        players.clear();
+        this.playerModel.removeAll();
 
         for (Component comp : playersPanel.getComponents()) {
             if (comp instanceof JPanel playerContainer) {
@@ -160,27 +159,22 @@ public class MainMenuPanel extends JPanel {
 
                 if (!name.isEmpty()) {
                     switch (type) {
-                        case "AI" -> players.add(new AIUniquePlayer(name));
-                        case "Fifteen" -> players.add(new FifteenPlayer(name));
-                        case "Human" -> players.add(new HumanPlayer(name));
-                        case "Random" -> players.add(new RandomPlayer(name));
-                        case "Unique" -> players.add(new UniquePlayer(name));
-                        case "Wimp" -> players.add(new WimpPlayer(name));
+                        case "AI" -> this.playerModel.addPlayer(new AIUniquePlayer(name));
+                        case "Fifteen" -> this.playerModel.addPlayer(new FifteenPlayer(name));
+                        case "Human" -> this.playerModel.addPlayer(new HumanPlayer(name));
+                        case "Random" -> this.playerModel.addPlayer(new RandomPlayer(name));
+                        case "Unique" -> this.playerModel.addPlayer(new UniquePlayer(name));
+                        case "Wimp" -> this.playerModel.addPlayer(new WimpPlayer(name));
                     }
                 }
             }
         }
 
-        if (players.isEmpty()) {
+        if (this.playerModel.getAllPlayers().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please add at least one player.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Notify the main UI to switch to the game play panel
-        ((BulldogUI) SwingUtilities.getWindowAncestor(this)).startGame(players);
-    }
-
-    public List<Player> getPlayers() {
-        return players;
+        ((BulldogUI) SwingUtilities.getWindowAncestor(this)).startGame(this.playerModel.getAllPlayers());
     }
 }
