@@ -7,6 +7,7 @@ import me.yattaw.bulldog.ui.BulldogUI;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Michael Yattaw
@@ -32,7 +33,7 @@ public class MainMenuPanel extends JPanel {
     /**
      * Constructs the main menu panel with UI components for adding players and starting a game.
      */
-    public MainMenuPanel() {
+    public MainMenuPanel(PlayerModel playerModel) {
         setLayout(new BorderLayout());
 
         JButton addPlayerButton = new JButton("Add New Player");
@@ -56,7 +57,7 @@ public class MainMenuPanel extends JPanel {
         startGameButton.addActionListener(e -> startGame());
         add(startGameButton, BorderLayout.SOUTH);
 
-        this.playerModel = new PlayerModel();
+        this.playerModel = playerModel;
     }
 
     /**
@@ -147,8 +148,7 @@ public class MainMenuPanel extends JPanel {
      * Starts the game by collecting player data and initializing the match.
      */
     private void startGame() {
-        this.playerModel.removeAll();
-
+        playerModel.removeAll();
         for (Component comp : playersPanel.getComponents()) {
             if (comp instanceof JPanel playerContainer) {
                 JPanel inputPanel = (JPanel) playerContainer.getComponent(0);
@@ -158,23 +158,23 @@ public class MainMenuPanel extends JPanel {
                 String type = (String) ((JComboBox<?>) inputComponents[5]).getSelectedItem();
 
                 if (!name.isEmpty()) {
-                    switch (type) {
-                        case "AI" -> this.playerModel.addPlayer(new AIUniquePlayer(name));
-                        case "Fifteen" -> this.playerModel.addPlayer(new FifteenPlayer(name));
-                        case "Human" -> this.playerModel.addPlayer(new HumanPlayer(name));
-                        case "Random" -> this.playerModel.addPlayer(new RandomPlayer(name));
-                        case "Unique" -> this.playerModel.addPlayer(new UniquePlayer(name));
-                        case "Wimp" -> this.playerModel.addPlayer(new WimpPlayer(name));
+                    switch (Objects.requireNonNull(type)) {
+                        case "AI" -> playerModel.addPlayer(new AIUniquePlayer(name));
+                        case "Fifteen" -> playerModel.addPlayer(new FifteenPlayer(name));
+                        case "Human" -> playerModel.addPlayer(new HumanPlayer(name));
+                        case "Random" -> playerModel.addPlayer(new RandomPlayer(name));
+                        case "Unique" -> playerModel.addPlayer(new UniquePlayer(name));
+                        case "Wimp" -> playerModel.addPlayer(new WimpPlayer(name));
                     }
                 }
             }
         }
 
-        if (this.playerModel.getAllPlayers().isEmpty()) {
+        if (playerModel.getAllPlayers().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please add at least one player.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        ((BulldogUI) SwingUtilities.getWindowAncestor(this)).startGame(this.playerModel.getAllPlayers());
+        ((BulldogUI) SwingUtilities.getWindowAncestor(this)).startGame(playerModel);
     }
 }

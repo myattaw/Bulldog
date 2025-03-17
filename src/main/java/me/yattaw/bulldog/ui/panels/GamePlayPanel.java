@@ -1,6 +1,7 @@
 package me.yattaw.bulldog.ui.panels;
 
 import me.yattaw.bulldog.BulldogApplication;
+import me.yattaw.bulldog.model.PlayerModel;
 import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.players.types.HumanPlayer;
 import me.yattaw.bulldog.ui.BulldogUI;
@@ -26,9 +27,6 @@ public class GamePlayPanel extends JPanel {
     /** Buttons for rolling dice, stopping a turn, and returning to the main menu. */
     private JButton rollDiceButton, stopTurnButton, mainMenuButton;
 
-    /** List of players in the current game session. */
-    private List<Player> players;
-
     /** Index of the current player's turn. */
     private int currentPlayerIndex;
 
@@ -37,6 +35,9 @@ public class GamePlayPanel extends JPanel {
 
     /** Tracks the current round score. */
     private int currentRoundScore;
+
+    /** List of players added in the menu. */
+    private PlayerModel playerModel;
 
     /**
      * Constructs the game panel and initializes UI components for gameplay.
@@ -77,10 +78,10 @@ public class GamePlayPanel extends JPanel {
      * Starts a new game session with the given list of players.
      * Resets the game state and begins the first player's turn.
      *
-     * @param players The players participating in the game.
+     * @param playerModel A model that handles players participating in the game.
      */
-    public void startGame(List<Player> players) {
-        this.players = players;
+    public void startGame(PlayerModel playerModel) {
+        this.playerModel = playerModel;
         currentPlayerIndex = 0;
         gameInProgress = true;
         currentRoundScore = 0;
@@ -92,7 +93,7 @@ public class GamePlayPanel extends JPanel {
      * Displays whose turn it is and enables or disables controls based on player type.
      */
     private void startNextTurn() {
-        Player currentPlayer = players.get(currentPlayerIndex);
+        Player currentPlayer = playerModel.getAllPlayers().get(currentPlayerIndex);
         updateTranscript("It's " + currentPlayer.getName() + "'s turn!");
 
         // If the player is human, enable roll and stop buttons
@@ -117,7 +118,7 @@ public class GamePlayPanel extends JPanel {
      * Otherwise, the rolled value is added to the round score.
      */
     private void rollDice() {
-        Player currentPlayer = players.get(currentPlayerIndex);
+        Player currentPlayer = playerModel.getAllPlayers().get(currentPlayerIndex);
         if (currentPlayer instanceof HumanPlayer) {
             int roll = currentPlayer.rollDie();
             updateTranscript(currentPlayer.getName() + " rolled a " + roll + ".");
@@ -139,7 +140,7 @@ public class GamePlayPanel extends JPanel {
      * Adds the current round score to their total score and proceeds to the next player.
      */
     private void stopTurn() {
-        Player currentPlayer = players.get(currentPlayerIndex);
+        Player currentPlayer = playerModel.getAllPlayers().get(currentPlayerIndex);
         if (currentPlayer instanceof HumanPlayer) {
             updateTranscript(currentPlayer.getName() + " chose to stop.");
             endTurn();
@@ -151,7 +152,7 @@ public class GamePlayPanel extends JPanel {
      * Updates the total score, checks for a winner, and moves to the next player.
      */
     private void endTurn() {
-        Player currentPlayer = players.get(currentPlayerIndex);
+        Player currentPlayer = playerModel.getAllPlayers().get(currentPlayerIndex);
 
         // Add the round score to the player's total score
         currentPlayer.setScore(currentPlayer.getScore() + currentRoundScore);
@@ -169,7 +170,7 @@ public class GamePlayPanel extends JPanel {
 
         // Reset round score and switch to the next player
         currentRoundScore = 0;
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        currentPlayerIndex = (currentPlayerIndex + 1) % playerModel.getPlayerCount();
         startNextTurn();
     }
 
@@ -178,6 +179,7 @@ public class GamePlayPanel extends JPanel {
      */
     private void updateScores() {
         updateTranscript("Current scores:");
+        List<Player> players = playerModel.getAllPlayers();
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
             updateTranscript(" - Player " + (i + 1) + " '" + player.getName() + "': " + player.getScore() + " points");

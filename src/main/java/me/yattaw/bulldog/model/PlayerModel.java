@@ -82,6 +82,15 @@ public class PlayerModel {
     }
 
     /**
+     * Retrieves the total number of players in the model.
+     *
+     * @return The number of players currently stored in the model.
+     */
+    public int getPlayerCount() {
+        return players.size();
+    }
+
+    /**
      * Returns the full list of players.
      *
      * @return An ArrayList of Player objects.

@@ -1,5 +1,6 @@
 package me.yattaw.bulldog.ui;
 
+import me.yattaw.bulldog.model.PlayerModel;
 import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.ui.panels.GamePlayPanel;
 import me.yattaw.bulldog.ui.panels.MainMenuPanel;
@@ -43,7 +44,8 @@ public class BulldogUI extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        mainMenuPanel = new MainMenuPanel();
+
+        mainMenuPanel = new MainMenuPanel(new PlayerModel());
         gamePlayPanel = new GamePlayPanel();
 
         mainPanel.add(mainMenuPanel, "MainMenu");
@@ -56,10 +58,10 @@ public class BulldogUI extends JFrame {
 
     /**
      * Starts the game with the provided players and switches to the gameplay screen.
-     * @param players The list of players participating in the game.
+     * @param playerModel A model that handles players participating in the game.
      */
-    public void startGame(List<Player> players) {
-        gamePlayPanel.startGame(players);
+    public void startGame(PlayerModel playerModel) {
+        gamePlayPanel.startGame(playerModel);
         cardLayout.show(mainPanel, "GamePlay");
     }
 
