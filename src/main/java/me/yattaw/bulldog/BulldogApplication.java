@@ -1,5 +1,6 @@
 package me.yattaw.bulldog;
 
+import me.yattaw.bulldog.data.Dice;
 import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.players.types.*;
 

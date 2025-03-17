@@ -1,5 +1,6 @@
 package me.yattaw.bulldog.players;
 
+import me.yattaw.bulldog.BulldogApplication;
 import me.yattaw.bulldog.data.Dice;
 
 /**
@@ -69,7 +70,7 @@ public abstract class Player {
      * @return A random integer between 1 and 6
      */
     public int rollDie() {
-        return new Dice(6).roll();
+        return Dice.DEFAULT_DIE.roll();
     }
 
 }

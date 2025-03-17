@@ -13,6 +13,9 @@ public class Dice {
     /** A shared instance of Random used for rolling the die. */
     private static final Random RANDOM = new Random();
 
+    /** The single shared instance of Dice with 6 sides. */
+    public static final Dice DEFAULT_DIE = new Dice(6);
+
     /** The number of sides on the die. */
     private final int sides;
 
