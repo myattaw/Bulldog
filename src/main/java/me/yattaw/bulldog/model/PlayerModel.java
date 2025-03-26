@@ -3,6 +3,7 @@ package me.yattaw.bulldog.model;
 import me.yattaw.bulldog.players.Player;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Michael Yattaw
@@ -40,6 +41,31 @@ public class PlayerModel {
     }
 
     /**
+     * Retrieves a Player object by the specified name.
+     *
+     * @param name The name of the player to retrieve.
+     * @return An Optional containing the Player object if found; otherwise, an empty Optional.
+     * @throws IllegalArgumentException if the name is null or empty.
+     */
+    public Optional<Player> getPlayerByName(String name) {
+        // Validate the input name
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
+
+        // Iterate through the list of players to find a match
+        for (Player player : players) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return Optional.of(player); // Return the player wrapped in an Optional
+            }
+        }
+
+        // Return an empty Optional if no player with the specified name is found
+        return Optional.empty();
+    }
+
+
+    /**
      * Retrieves the name of a player at the specified index.
      *
      * @param index The index of the player in the list.
@@ -66,6 +92,7 @@ public class PlayerModel {
         }
         return players.get(index).getScore();
     }
+
 
     /**
      * Updates the score of a player at the specified index.

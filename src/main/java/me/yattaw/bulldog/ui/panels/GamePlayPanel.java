@@ -5,6 +5,7 @@ import me.yattaw.bulldog.model.PlayerModel;
 import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.players.types.HumanPlayer;
 import me.yattaw.bulldog.ui.BulldogUI;
+import me.yattaw.bulldog.ui.scoreboard.ScoreboardViewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +39,8 @@ public class GamePlayPanel extends JPanel {
 
     /** List of players added in the menu. */
     private PlayerModel playerModel;
+
+    private ScoreboardViewer scoreboardViewer;
 
     /**
      * Constructs the game panel and initializes UI components for gameplay.
@@ -78,10 +81,12 @@ public class GamePlayPanel extends JPanel {
      * Starts a new game session with the given list of players.
      * Resets the game state and begins the first player's turn.
      *
-     * @param playerModel A model that handles players participating in the game.
+     * @param playerModel      A model that handles players participating in the game.
+     * @param scoreboardViewer A JFrame that live updates with players scores.
      */
-    public void startGame(PlayerModel playerModel) {
+    public void startGame(PlayerModel playerModel, ScoreboardViewer scoreboardViewer) {
         this.playerModel = playerModel;
+        this.scoreboardViewer = scoreboardViewer;
         currentPlayerIndex = 0;
         gameInProgress = true;
         currentRoundScore = 0;
@@ -155,7 +160,8 @@ public class GamePlayPanel extends JPanel {
         Player currentPlayer = playerModel.getAllPlayers().get(currentPlayerIndex);
 
         // Add the round score to the player's total score
-        currentPlayer.setScore(currentPlayer.getScore() + currentRoundScore);
+        playerModel.setPlayerScore(currentPlayerIndex, currentPlayer.getScore() + currentRoundScore);
+
         updateScores();
 
         // Check if the player has reached the winning score
@@ -185,6 +191,9 @@ public class GamePlayPanel extends JPanel {
             updateTranscript(" - Player " + (i + 1) + " '" + player.getName() + "': " + player.getScore() + " points");
         }
         transcriptArea.append("\n");
+        if (scoreboardViewer != null) {
+            scoreboardViewer.update(playerModel);
+        }
     }
 
     /**

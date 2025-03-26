@@ -3,6 +3,7 @@ package me.yattaw.bulldog.ui.panels;
 import me.yattaw.bulldog.model.PlayerModel;
 import me.yattaw.bulldog.players.types.*;
 import me.yattaw.bulldog.ui.BulldogUI;
+import me.yattaw.bulldog.ui.scoreboard.ScoreboardViewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +30,7 @@ public class MainMenuPanel extends JPanel {
 
     /** List of players added in the menu. */
     private final PlayerModel playerModel;
+    private ScoreboardViewer scoreboardViewer;
 
     /**
      * Constructs the main menu panel with UI components for adding players and starting a game.
@@ -50,12 +52,24 @@ public class MainMenuPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(playersPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
         add(scrollPane, BorderLayout.CENTER);
 
+        JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        JCheckBox toggleScoreboard = new JCheckBox("Live Scoreboard");
+        toggleScoreboard.setPreferredSize(new Dimension(150, 30)); // Smaller size
+
         JButton startGameButton = new JButton("Start Match");
-        startGameButton.addActionListener(e -> startGame());
-        add(startGameButton, BorderLayout.SOUTH);
+        startGameButton.addActionListener(e -> {
+            startGame(toggleScoreboard.isSelected());
+        });
+        startGameButton.setPreferredSize(new Dimension(200, 40)); // Larger size
+
+        // Add both to the southPanel
+        southPanel.add(toggleScoreboard);
+        southPanel.add(startGameButton);
+
+        // Add the southPanel to SOUTH
+        add(southPanel, BorderLayout.SOUTH);
 
         this.playerModel = playerModel;
     }
@@ -145,9 +159,15 @@ public class MainMenuPanel extends JPanel {
     }
 
     /**
-     * Starts the game by collecting player data and initializing the match.
+     * Initializes the game by collecting player data from the user interface,
+     * adding the players to the model, and starting the match. The method also
+     * handles enabling or disabling the scoreboard based on the provided flag.
+     *
+     * @param scoreboardEnabled A boolean flag indicating whether the scoreboard
+     *                          should be enabled for the match. If true, the
+     *                          scoreboard will be created and displayed.
      */
-    private void startGame() {
+    private void startGame(boolean scoreboardEnabled) {
         playerModel.removeAll();
         for (Component comp : playersPanel.getComponents()) {
             if (comp instanceof JPanel playerContainer) {
@@ -175,6 +195,11 @@ public class MainMenuPanel extends JPanel {
             return;
         }
 
-        ((BulldogUI) SwingUtilities.getWindowAncestor(this)).startGame(playerModel);
+        if (scoreboardEnabled) {
+            this.scoreboardViewer = new ScoreboardViewer();
+        }
+
+        ((BulldogUI) SwingUtilities.getWindowAncestor(this)).startGame(playerModel, scoreboardViewer);
     }
+
 }
