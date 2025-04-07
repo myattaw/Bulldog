@@ -8,7 +8,7 @@ import java.util.Random;
  * COS 420, Spring 2025
  * Dice Class: Represents a standard die that can be rolled.
  */
-public class Dice {
+public class Dice extends RandomDice {
 
     /** A shared instance of Random used for rolling the die. */
     private static final Random RANDOM = new Random();
@@ -16,38 +16,23 @@ public class Dice {
     /** The single shared instance of Dice with 6 sides. */
     public static final Dice DEFAULT_DIE = new Dice(6);
 
-    /** The number of sides on the die. */
-    private final int sides;
-
     /**
      * Constructs a Dice object with a specified number of sides.
      *
-     * @param sides The number of sides on the die. Must be greater than 0.
-     * @throws IllegalArgumentException if sides is less than 1.
+     * @param sides The number of sides on the die.
      */
     public Dice(int sides) {
-        if (sides < 1) {
-            throw new IllegalArgumentException("Number of sides must be at least 1");
-        }
-        this.sides = sides;
+        super(sides);
     }
 
     /**
      * Rolls the die and returns a random number between 1 and the number of sides (inclusive).
      *
-     * @return A randomly generated number between 1 and {@code sides}.
+     * @return A randomly generated number between 1 and the number of sides.
      */
+    @Override
     public int roll() {
-        return RANDOM.nextInt(this.sides) + 1;
-    }
-
-    /**
-     * Gets the number of sides on the die.
-     *
-     * @return The number of sides of this die.
-     */
-    public int getSides() {
-        return sides;
+        return RANDOM.nextInt(getSides()) + 1;
     }
 
 }
