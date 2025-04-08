@@ -1,5 +1,7 @@
 package me.yattaw.bulldog.players.types;
 
+import me.yattaw.bulldog.data.Dice;
+import me.yattaw.bulldog.data.RandomDice;
 import me.yattaw.bulldog.players.Player;
 
 /**
@@ -14,6 +16,8 @@ public class SevenPlayer extends Player {
 
     /** The target score (7) that the player aims to reach or exceed. */
     private static final int TARGET_SCORE = 7;
+
+    private RandomDice dice = Dice.DEFAULT_DIE;
 
     /**
      * Constructor for creating a default FifteenPlayer with the name "Fifteen".
@@ -55,6 +59,15 @@ public class SevenPlayer extends Player {
 
         System.out.printf("   Player %s chose not to continue, scoring %d for the turn%n", getName(), roundScore);
         return roundScore;
+    }
+
+    public void setDice(RandomDice dice) {
+        this.dice = dice;
+    }
+
+    @Override
+    public int rollDie() {
+        return dice.roll();
     }
 
 }
