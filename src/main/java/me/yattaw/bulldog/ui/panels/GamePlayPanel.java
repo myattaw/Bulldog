@@ -21,9 +21,11 @@ import java.util.List;
  * GamePlayPanel class: Manages gameplay interactions, including rolling dice and tracking scores.
  */
 public class GamePlayPanel extends JPanel implements BulldogReferee.GameEventListener {
+
     private JTextArea transcriptArea;
     private JButton rollDiceButton, stopTurnButton, mainMenuButton;
     private BulldogReferee referee;
+    private ScoreboardViewer scoreboardViewer;
 
     public GamePlayPanel() {
         setLayout(new BorderLayout());
@@ -49,15 +51,18 @@ public class GamePlayPanel extends JPanel implements BulldogReferee.GameEventLis
         controlPanel.add(mainMenuButton);
 
         add(controlPanel, BorderLayout.SOUTH);
+
+        // Get the singleton instance
+        referee = BulldogReferee.getInstance();
     }
 
     public void startGame(PlayerModel playerModel, ScoreboardViewer scoreboardViewer) {
-        referee = new BulldogReferee(playerModel);
+        this.scoreboardViewer = scoreboardViewer;
+        referee.initialize(playerModel);
         referee.setEventListener(this);
         referee.startGame();
     }
 
-    // Implement GameEventListener methods
     @Override
     public void onGameStarted() {
         updateTranscript("Game started!");
@@ -103,6 +108,9 @@ public class GamePlayPanel extends JPanel implements BulldogReferee.GameEventLis
             Player player = players.get(i);
             updateTranscript(" - Player " + (i + 1) + " '" + player.getName() + "': " + player.getScore() + " points");
         }
+        if (scoreboardViewer != null) {
+            scoreboardViewer.update(referee.getPlayerModel());
+        }
     }
 
     @Override
@@ -119,5 +127,4 @@ public class GamePlayPanel extends JPanel implements BulldogReferee.GameEventLis
         String timestamp = currentTime.format(formatter);
         transcriptArea.append("[" + timestamp + "]: " + message + "\n");
     }
-
 }

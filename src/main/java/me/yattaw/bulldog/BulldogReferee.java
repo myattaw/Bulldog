@@ -5,11 +5,22 @@ import me.yattaw.bulldog.players.Player;
 import me.yattaw.bulldog.players.types.HumanPlayer;
 
 /**
- * Referee class: Handles all game logic independently of UI components.
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * BulldogReferee class:
+ * Central controller for managing the Bulldog game session.
+ * Handles player turns, dice rolls, scoring, and turn transitions.
+ * Coordinates interactions between human/AI players and the game state.
+ * Notifies listeners of game events such as start, end, dice rolls, and score updates.
  */
 public class BulldogReferee {
 
-    private final PlayerModel playerModel;
+    // Singleton instance
+    private static final BulldogReferee instance = new BulldogReferee();
+
+    private PlayerModel playerModel;
     private int currentPlayerIndex;
     private boolean gameInProgress;
     private int currentRoundScore;
@@ -17,8 +28,34 @@ public class BulldogReferee {
     // Game event listeners
     private GameEventListener eventListener;
 
-    public BulldogReferee(PlayerModel playerModel) {
+    // Private constructor for singleton
+    private BulldogReferee() {
+        // Initialize with default values
+        reset();
+    }
+
+    /**
+     * Gets the singleton instance of BulldogReferee
+     */
+    public static BulldogReferee getInstance() {
+        return instance;
+    }
+
+    /**
+     * Initializes or resets the referee for a new game
+     */
+    public void initialize(PlayerModel playerModel) {
         this.playerModel = playerModel;
+        reset();
+    }
+
+    /**
+     * Resets game state while keeping the same player model
+     */
+    private void reset() {
+        currentPlayerIndex = 0;
+        gameInProgress = false;
+        currentRoundScore = 0;
     }
 
     /**
@@ -32,9 +69,12 @@ public class BulldogReferee {
      * Starts a new game session
      */
     public void startGame() {
-        currentPlayerIndex = 0;
+        if (playerModel == null) {
+            throw new IllegalStateException("PlayerModel must be initialized before starting game");
+        }
+
+        reset();
         gameInProgress = true;
-        currentRoundScore = 0;
         notifyGameStarted();
         startNextTurn();
     }
@@ -173,7 +213,6 @@ public class BulldogReferee {
      * Interface for game event callbacks
      */
     public interface GameEventListener {
-
         void onGameStarted();
         void onTurnStarted(Player player);
         void onDiceRolled(Player player, int value);
@@ -182,5 +221,4 @@ public class BulldogReferee {
         void onScoresUpdated();
         void onGameEnded(Player winner);
     }
-
 }
