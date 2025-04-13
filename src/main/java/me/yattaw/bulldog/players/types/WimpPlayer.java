@@ -1,5 +1,6 @@
 package  me.yattaw.bulldog.players.types;
 
+import me.yattaw.bulldog.model.GameStatus;
 import me.yattaw.bulldog.players.Player;
 
 /**
@@ -30,24 +31,24 @@ public class WimpPlayer extends Player {
     }
 
     /**
-     * Takes one turn for this Player. A WimpPlayer always rolls the die once.
-     * If the roll is a 6, the player scores 0 for the turn. Otherwise, the player
-     * scores the value of the roll and chooses not to continue.
+     * Determines whether the WimpPlayer wants to continue rolling.
+     * A WimpPlayer never continues after the first roll (unless forced by game rules).
      *
-     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     * @param gameStatus The current game status information
+     * @return false always (WimpPlayer never continues rolling)
      */
     @Override
-    public int play() {
-        int roll = rollDie();
-        System.out.print("   Player " + getName() + " rolled " + roll);
+    public boolean continueRolling(GameStatus gameStatus) {
+        System.out.print("   Player " + getName() + " rolled " + gameStatus.getLastRoll());
 
-        if (roll == 6) {
+        if (gameStatus.getLastRoll() == 6) {
             System.out.println(" and scored 0 for the turn.");
-            return 0;
         } else {
-            System.out.println(" and chose not to continue, scoring " + roll + " for the turn.");
-            return roll;
+            System.out.println(" and chose not to continue, scoring " +
+                    gameStatus.getRoundScore() + " for the turn.");
         }
+
+        return false;
     }
 
 }

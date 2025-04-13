@@ -2,6 +2,7 @@ package me.yattaw.bulldog.players;
 
 import me.yattaw.bulldog.BulldogApplication;
 import me.yattaw.bulldog.data.Dice;
+import me.yattaw.bulldog.model.GameStatus;
 
 /**
  * David Levine
@@ -57,12 +58,41 @@ public abstract class Player {
     }
 
     /**
-     * Abstract method that encapsulates one turn for this Player.
-     * Subclasses must implement this method to define specific behavior.
+     * Encapsulates one turn for this Player.
+     * The common logic is moved here from concrete subclasses.
      *
-     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     * @return The score earned by the player on this turn
      */
-    public abstract int play();
+    public int play() {
+        GameStatus gameStatus = new GameStatus();
+
+        while (!gameStatus.isTurnOver()) {
+            int roll = rollDie();
+            gameStatus.setLastRoll(roll);
+
+            if (roll == 6) {
+                gameStatus.setRoundScore(0);
+                gameStatus.setTurnOver(true);
+            } else {
+                gameStatus.setRoundScore(gameStatus.getRoundScore() + roll);
+                if (!continueRolling(gameStatus)) {
+                    gameStatus.setTurnOver(true);
+                }
+            }
+        }
+
+        this.score += gameStatus.getRoundScore();
+        return gameStatus.getRoundScore();
+    }
+
+    /**
+     * Abstract method that determines whether the player wants to continue rolling.
+     * Subclasses must implement this to provide their specific decision logic.
+     *
+     * @param gameStatus The current game status information
+     * @return true if the player wants to continue rolling, false otherwise
+     */
+    public abstract boolean continueRolling(GameStatus gameStatus);
 
     /**
      * Simulates rolling a six-sided die and returns a random integer between 1 and 6.

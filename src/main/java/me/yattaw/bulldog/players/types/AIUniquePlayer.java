@@ -1,5 +1,6 @@
 package me.yattaw.bulldog.players.types;
 
+import me.yattaw.bulldog.model.GameStatus;
 import me.yattaw.bulldog.players.Player;
 
 /**
@@ -38,39 +39,32 @@ public class AIUniquePlayer extends Player {
     }
 
     /**
-     * Takes turns for this Player, rolling the die until a 6 is rolled or the dynamic threshold is reached.
-     * The threshold decreases as the player's overall score increases, ensuring the player becomes more
-     * cautious as their score grows.
+     * Determines whether the AI player should continue rolling based on their dynamic threshold strategy.
+     * The threshold decreases as the player's overall score increases.
      *
-     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     * @param gameStatus The current game status information
+     * @return true if should continue rolling, false otherwise
      */
     @Override
-    public int play() {
-        int turnScore = 0;
-        boolean continueRolling = true;
-
-        while (continueRolling) {
-            int roll = rollDie();
-            System.out.print("   Player " + getName() + " rolled " + roll);
-
-            if (roll == 6) {
-                System.out.println(" and scored 0 for the turn.");
-                return 0;
-            } else {
-                turnScore += roll;
-                System.out.println(" and has a cumulative score of " + turnScore + " for the turn.");
-
-                int threshold = calculateThreshold();
-                if (turnScore >= threshold) {
-                    System.out.println("   Player " + getName() + " chose to end the turn with a score of " + turnScore + ".");
-                    continueRolling = false;
-                } else {
-                    System.out.println("   Player " + getName() + " chose to continue rolling.");
-                }
-            }
+    public boolean continueRolling(GameStatus gameStatus) {
+        if (gameStatus.getLastRoll() == 6) {
+            System.out.println("   Player " + getName() + " rolled " + gameStatus.getLastRoll() +
+                    " and scored 0 for the turn.");
+            return false;
         }
 
-        return turnScore;
+        System.out.println("   Player " + getName() + " rolled " + gameStatus.getLastRoll() +
+                " and has a cumulative score of " + gameStatus.getRoundScore() + " for the turn.");
+
+        int threshold = calculateThreshold();
+        if (gameStatus.getRoundScore() >= threshold) {
+            System.out.println("   Player " + getName() + " chose to end the turn with a score of " +
+                    gameStatus.getRoundScore() + ".");
+            return false;
+        }
+
+        System.out.println("   Player " + getName() + " chose to continue rolling.");
+        return true;
     }
 
     /**

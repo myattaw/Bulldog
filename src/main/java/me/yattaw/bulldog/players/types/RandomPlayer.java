@@ -1,5 +1,6 @@
 package  me.yattaw.bulldog.players.types;
 
+import me.yattaw.bulldog.model.GameStatus;
 import me.yattaw.bulldog.players.Player;
 
 /**
@@ -32,29 +33,29 @@ public class RandomPlayer extends Player {
     }
 
     /**
-     * Takes turns rolling the die until a randomly generated value is greater than 0.5 (50% chance).
-     * If a six is rolled, the player scores 0 for the turn. Otherwise, the player accumulates the sum
-     * of the rolls until they choose to stop based on the random chance.
+     * Determines whether the RandomPlayer should continue rolling based on random chance.
+     * There's a 50% chance to continue after each successful roll (not a six).
      *
-     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     * @param gameStatus The current game status information
+     * @return true if random value < CONTINUE_CHANCE and no six was rolled, false otherwise
      */
     @Override
-    public int play() {
-        int roundScore = 0;
+    public boolean continueRolling(GameStatus gameStatus) {
+        if (gameStatus.getLastRoll() == 6) {
+            System.out.printf("   Player %s rolled 6, so player scored 0 for the turn.%n", getName());
+            return false;
+        }
 
-        do {
-            int roll = rollDie();
-            if (roll == 6) {
-                System.out.printf("   Player %s rolled %d, so player scored 0 for the turn.%n", getName(), roll);
-                return 0;
-            } else {
-                roundScore += roll;
-                System.out.printf("   Player %s rolled %d, cumulative score is %d%n", getName(), roll, roundScore);
-            }
-        } while (Math.random() < CONTINUE_CHANCE);
+        System.out.printf("   Player %s rolled %d, cumulative score is %d%n",
+                getName(), gameStatus.getLastRoll(), gameStatus.getRoundScore());
 
-        System.out.printf("   Player %s chose not to continue, scoring %d for the turn%n", getName(), roundScore);
-        return roundScore;
+        if (Math.random() < CONTINUE_CHANCE) {
+            return true;
+        } else {
+            System.out.printf("   Player %s chose not to continue, scoring %d for the turn%n",
+                    getName(), gameStatus.getRoundScore());
+            return false;
+        }
     }
 
 }

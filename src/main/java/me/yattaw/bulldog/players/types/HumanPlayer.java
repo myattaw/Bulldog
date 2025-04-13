@@ -1,5 +1,6 @@
 package me.yattaw.bulldog.players.types;
 
+import me.yattaw.bulldog.model.GameStatus;
 import me.yattaw.bulldog.players.Player;
 
 import java.util.Scanner;
@@ -34,35 +35,32 @@ public class HumanPlayer extends Player {
     }
 
     /**
-     * Takes turns for this Player, allowing the user to decide when to stop rolling.
-     * The user can type 'stop' to end their turn or press Enter to continue rolling.
-     * If a six is rolled, the player scores 0 for the turn. Otherwise, the player
-     * accumulates the sum of the rolls until they choose to stop.
+     * Determines whether the human player wants to continue rolling.
+     * Prompts the user for input after each roll (unless a six was rolled).
      *
-     * @return The score earned by the player on this turn, which will be zero if a six was rolled
+     * @param gameStatus The current game status information
+     * @return true if player wants to continue rolling, false otherwise
      */
     @Override
-    public int play() {
-        int roundScore = 0;
-
-        while (true) {
-            System.out.println("Type 'stop' to end turn or press Enter to continue:");
-            String input = SCANNER.nextLine().trim();
-
-            if (input.equalsIgnoreCase("stop")) {
-                System.out.printf("   Player %s chose not to continue, scoring %d for the turn%n", getName(), roundScore);
-                return roundScore;
-            }
-
-            int roll = rollDie();
-            if (roll == 6) {
-                System.out.printf("   Player %s rolled %d, so player scored 0 for the turn.%n", getName(), roll);
-                return 0;
-            } else {
-                roundScore += roll;
-                System.out.printf("   Player %s rolled %d, cumulative score is %d%n", getName(), roll, roundScore);
-            }
+    public boolean continueRolling(GameStatus gameStatus) {
+        if (gameStatus.getLastRoll() == 6) {
+            System.out.printf("   Player %s rolled 6, so player scored 0 for the turn.%n", getName());
+            return false;
         }
+
+        System.out.printf("   Player %s rolled %d, cumulative score is %d%n",
+                getName(), gameStatus.getLastRoll(), gameStatus.getRoundScore());
+
+        System.out.println("Type 'stop' to end turn or press Enter to continue:");
+        String input = SCANNER.nextLine().trim();
+
+        if (input.equalsIgnoreCase("stop")) {
+            System.out.printf("   Player %s chose not to continue, scoring %d for the turn%n",
+                    getName(), gameStatus.getRoundScore());
+            return false;
+        }
+
+        return true;
     }
 
 }
