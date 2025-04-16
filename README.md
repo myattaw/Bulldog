@@ -5,7 +5,7 @@
 ## 🧑‍💻 Author & Course Info
 
 - **Author:** Michael Yattaw
-- **Course:** COS 420
+- **Course:** COS 420 – Object-Oriented Design and Programming
 - **Semester:** Spring 2025
 
 ## 🎮 Gameplay
@@ -40,5 +40,6 @@ Each PDF includes detailed explanations of design decisions, code structure, tes
 - `Program5.pdf` – Enhancing the codebase with incremental AI-driven improvements.
 - `Program6.pdf` – Applying Model-View-Controller (MVC) architecture with AI assistance.
 - `Program7.pdf` – Adding unit tests and Dice classes for unit testing.
+- `Program8.pdf` – Implemented the Strategy pattern for Player classes.
 
 > These files serve as part of the coursework documentation and can be useful for understanding how the game evolved over time.
