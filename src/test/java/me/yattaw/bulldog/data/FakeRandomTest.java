@@ -1,6 +1,7 @@
 package me.yattaw.bulldog.data;
 
-import me.yattaw.bulldog.players.types.SevenPlayer;
+import me.yattaw.bulldog.core.data.FakeRandom;
+import me.yattaw.bulldog.core.players.types.SevenPlayer;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

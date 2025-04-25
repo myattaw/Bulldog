@@ -1,4 +1,4 @@
-package me.yattaw.bulldog.data;
+package me.yattaw.bulldog.core.data;
 
 /**
  * Michael Yattaw

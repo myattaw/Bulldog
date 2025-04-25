@@ -1,8 +1,9 @@
 package me.yattaw.bulldog;
 
-import me.yattaw.bulldog.model.PlayerModel;
-import me.yattaw.bulldog.players.Player;
-import me.yattaw.bulldog.players.types.HumanPlayer;
+import me.yattaw.bulldog.core.GameEngine;
+import me.yattaw.bulldog.core.model.PlayerModel;
+import me.yattaw.bulldog.core.players.Player;
+import me.yattaw.bulldog.core.players.types.HumanPlayer;
 
 /**
  * Michael Yattaw
@@ -155,7 +156,7 @@ public class BulldogReferee {
 
         notifyScoresUpdated();
 
-        if (newScore >= BulldogApplication.WINNING_SCORE) {
+        if (newScore >= GameEngine.WINNING_SCORE) {
             gameInProgress = false;
             notifyGameEnded(currentPlayer);
             return;

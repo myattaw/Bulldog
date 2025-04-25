@@ -1,7 +1,7 @@
-package  me.yattaw.bulldog.players.types;
+package me.yattaw.bulldog.core.players.types;
 
-import me.yattaw.bulldog.model.GameStatus;
-import me.yattaw.bulldog.players.Player;
+import me.yattaw.bulldog.core.model.GameStatus;
+import me.yattaw.bulldog.core.players.Player;
 
 /**
  * Michael Yattaw

@@ -1,8 +1,7 @@
-package me.yattaw.bulldog.players;
+package me.yattaw.bulldog.core.players;
 
-import me.yattaw.bulldog.BulldogApplication;
-import me.yattaw.bulldog.data.Dice;
-import me.yattaw.bulldog.model.GameStatus;
+import me.yattaw.bulldog.core.data.Dice;
+import me.yattaw.bulldog.core.model.GameStatus;
 
 /**
  * David Levine

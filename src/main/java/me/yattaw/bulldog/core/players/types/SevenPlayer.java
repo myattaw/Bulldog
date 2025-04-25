@@ -1,9 +1,9 @@
-package me.yattaw.bulldog.players.types;
+package me.yattaw.bulldog.core.players.types;
 
-import me.yattaw.bulldog.data.Dice;
-import me.yattaw.bulldog.data.RandomDice;
-import me.yattaw.bulldog.model.GameStatus;
-import me.yattaw.bulldog.players.Player;
+import me.yattaw.bulldog.core.players.Player;
+import me.yattaw.bulldog.core.data.Dice;
+import me.yattaw.bulldog.core.data.RandomDice;
+import me.yattaw.bulldog.core.model.GameStatus;
 
 /**
  * Michael Yattaw

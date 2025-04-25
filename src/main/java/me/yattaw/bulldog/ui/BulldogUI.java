@@ -1,6 +1,6 @@
 package me.yattaw.bulldog.ui;
 
-import me.yattaw.bulldog.model.PlayerModel;
+import me.yattaw.bulldog.core.model.PlayerModel;
 import me.yattaw.bulldog.ui.panels.GamePlayPanel;
 import me.yattaw.bulldog.ui.panels.MainMenuPanel;
 import me.yattaw.bulldog.ui.scoreboard.ScoreboardViewer;
@@ -72,11 +72,4 @@ public class BulldogUI extends JFrame {
         cardLayout.show(mainPanel, "MainMenu");
     }
 
-    /**
-     * Entry point for launching the Bulldog UI.
-     * @param args Command-line arguments (unused).
-     */
-    public static void main(String[] args) {
-        new BulldogUI();
-    }
 }

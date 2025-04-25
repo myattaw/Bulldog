@@ -1,9 +1,8 @@
 package me.yattaw.bulldog.ui.scoreboard;
 
-import me.yattaw.bulldog.model.PlayerModel;
-import me.yattaw.bulldog.players.Player;
-import me.yattaw.bulldog.players.types.RandomPlayer;
-import me.yattaw.bulldog.players.types.WimpPlayer;
+import me.yattaw.bulldog.core.model.PlayerModel;
+import me.yattaw.bulldog.core.players.Player;
+import me.yattaw.bulldog.core.players.types.RandomPlayer;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,6 @@
-package me.yattaw.bulldog.model;
+package me.yattaw.bulldog.core.model;
 
-import me.yattaw.bulldog.players.Player;
+import me.yattaw.bulldog.core.players.Player;
 
 import java.util.ArrayList;
 import java.util.Optional;

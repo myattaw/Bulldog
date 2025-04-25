@@ -1,7 +1,7 @@
 package me.yattaw.bulldog.ui.panels;
 
-import me.yattaw.bulldog.model.PlayerModel;
-import me.yattaw.bulldog.players.types.*;
+import me.yattaw.bulldog.core.model.PlayerModel;
+import me.yattaw.bulldog.core.players.types.*;
 import me.yattaw.bulldog.ui.BulldogUI;
 import me.yattaw.bulldog.ui.scoreboard.ScoreboardViewer;
 
