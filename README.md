@@ -41,5 +41,6 @@ Each PDF includes detailed explanations of design decisions, code structure, tes
 - `Program6.pdf` – Applying Model-View-Controller (MVC) architecture with AI assistance.
 - `Program7.pdf` – Adding unit tests and Dice classes for unit testing.
 - `Program8.pdf` – Implemented the Strategy pattern for Player classes.
+- `Program9.pdf` – Implemented the State pattern and Reflections as proposed improvements.
 
 > These files serve as part of the coursework documentation and can be useful for understanding how the game evolved over time.
