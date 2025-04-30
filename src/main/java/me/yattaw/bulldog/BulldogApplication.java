@@ -1,14 +1,10 @@
 package me.yattaw.bulldog;
 
 import me.yattaw.bulldog.core.GameContext;
-import me.yattaw.bulldog.core.GameEngine;
-import me.yattaw.bulldog.core.players.Player;
-import me.yattaw.bulldog.core.players.types.*;
 import me.yattaw.bulldog.states.ConsoleState;
 import me.yattaw.bulldog.states.SwingState;
 
 import javax.swing.*;
-import java.util.*;
 
 /**
  * Michael Yattaw

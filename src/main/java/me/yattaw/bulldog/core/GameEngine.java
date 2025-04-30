@@ -1,7 +1,7 @@
 package me.yattaw.bulldog.core;
 
 import me.yattaw.bulldog.core.players.Player;
-import me.yattaw.bulldog.core.players.types.*;
+import me.yattaw.bulldog.reflection.ReflectionHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,23 +51,11 @@ public class GameEngine {
      * @return True if the player was created and added, false if invalid type
      */
     public boolean createPlayer(String match, String playerType) {
-        Player player = createPlayerInstance(playerType);
+        Player player = ReflectionHelper.createPlayerInstance(playerType);
         if (player == null) {
             return false;
         }
         return matchPlayers.get(match).add(player);
-    }
-
-    private Player createPlayerInstance(String playerType) {
-        return switch (playerType.toLowerCase()) {
-            case "ai" -> new AIUniquePlayer("AICodedPlayer");
-            case "fifteen" -> new FifteenPlayer("FifteenPlayer");
-            case "human" -> new HumanPlayer("HumanPlayer");
-            case "random" -> new RandomPlayer("RandomPlayer");
-            case "unique" -> new UniquePlayer("UniquePlayer");
-            case "wimp" -> new WimpPlayer("WimpPlayer");
-            default -> null;
-        };
     }
 
     /**

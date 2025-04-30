@@ -1,9 +1,9 @@
 package me.yattaw.bulldog.states;
 
-import me.yattaw.bulldog.BulldogApplication;
 import me.yattaw.bulldog.core.GameEngine;
+import me.yattaw.bulldog.reflection.ReflectionHelper;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleState implements GameState {
@@ -46,8 +46,15 @@ public class ConsoleState implements GameState {
     }
 
     private void addPlayer(int playerNumber) {
+        // Get available player types dynamically
+        List<String> availableTypes = ReflectionHelper.getAvailablePlayerTypes();
+
         while (true) {
-            System.out.printf("Enter type for player %d (ai, fifteen, human, random, unique, wimp): %n", playerNumber);
+            // Show dynamic list of available types
+            System.out.printf("Enter type for player %d (available: %s): %n",
+                    playerNumber,
+                    String.join(", ", availableTypes));
+
             String playerType = scanner.nextLine().toLowerCase();
             if (gameEngine.createPlayer(matchName, playerType)) {
                 break;

@@ -1,14 +1,14 @@
 package me.yattaw.bulldog.ui.panels;
 
 import me.yattaw.bulldog.core.model.PlayerModel;
-import me.yattaw.bulldog.core.players.types.*;
+import me.yattaw.bulldog.reflection.ReflectionHelper;
 import me.yattaw.bulldog.ui.BulldogUI;
 import me.yattaw.bulldog.ui.scoreboard.ScoreboardViewer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * Michael Yattaw
@@ -91,7 +91,9 @@ public class MainMenuPanel extends JPanel {
         inputPanel.add(new JLabel("Name:"));
         inputPanel.add(nameField);
 
-        JComboBox<String> playerTypeCombo = new JComboBox<>(new String[]{"AI", "Fifteen", "Human", "Random", "Unique", "Wimp"});
+        List<String> availableTypes = ReflectionHelper.getAvailablePlayerTypes();
+        JComboBox<String> playerTypeCombo = new JComboBox<>(availableTypes.toArray(new String[0]));
+
         inputPanel.add(new JLabel("Type:"));
         inputPanel.add(playerTypeCombo);
 
@@ -178,14 +180,7 @@ public class MainMenuPanel extends JPanel {
                 String type = (String) ((JComboBox<?>) inputComponents[5]).getSelectedItem();
 
                 if (!name.isEmpty()) {
-                    switch (Objects.requireNonNull(type)) {
-                        case "AI" -> playerModel.addPlayer(new AIUniquePlayer(name));
-                        case "Fifteen" -> playerModel.addPlayer(new FifteenPlayer(name));
-                        case "Human" -> playerModel.addPlayer(new HumanPlayer(name));
-                        case "Random" -> playerModel.addPlayer(new RandomPlayer(name));
-                        case "Unique" -> playerModel.addPlayer(new UniquePlayer(name));
-                        case "Wimp" -> playerModel.addPlayer(new WimpPlayer(name));
-                    }
+                    playerModel.addPlayer(ReflectionHelper.createPlayerInstance(type));
                 }
             }
         }
