@@ -6,6 +6,14 @@ import me.yattaw.bulldog.reflection.ReflectionHelper;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * ConsoleState class: Console-based implementation of the GameState interface for the Bulldog game
+ * Handles user input for game initialization and coordinates gameplay through the GameEngine.
+ */
 public class ConsoleState implements GameState {
 
     private final GameEngine gameEngine;

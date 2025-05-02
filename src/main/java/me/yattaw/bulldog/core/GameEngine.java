@@ -9,8 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Core game engine that manages matches and player interactions.
- * Extracted from BulldogApplication to be used by both console and UI states.
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * GameEngine class: Core class for managing the Bulldog game's logic
+ * Manages matches, players, and gameplay until a player reaches the winning score.
  */
 public class GameEngine {
 

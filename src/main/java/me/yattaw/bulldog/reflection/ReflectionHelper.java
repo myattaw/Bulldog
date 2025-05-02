@@ -10,6 +10,14 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Michael Yattaw
+ * Login ID: michael.yattaw@maine.edu
+ * COS 420, Spring 2025
+ * Bulldog Project
+ * ReflectionHelper class: Utility class for the Bulldog game
+ * Uses Java reflection to dynamically discover and instantiate player types from the specified package.
+ */
 public final class ReflectionHelper {
 
     /**
